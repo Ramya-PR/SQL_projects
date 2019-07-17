@@ -20,6 +20,7 @@ The instructions below provide a detailed description of the steps you need to t
 #### Downloading PostgreSQL
 Installing PostgreSQL for Windows:
 http://www.postgresqltutorial.com/install-postgresql/
+
 Installing PostgreSQL for Mac OS:
 https://www.postgresql.org/download/macosx/
 #### Download DVD rental database
@@ -27,6 +28,7 @@ http://www.postgresqltutorial.com/postgresql-sample-database/
 Click on the "Download DVD Rental Sample Database" button and extract the dvdrental.tar.file.
 #### Load database
 The next step is to load the DVD Rental database into your PostgreSQL server on your machine using PgAdmin tool. Follow the instructions under the header "Load the DVD Rental database using pgAdmin tool" in the link:http://www.postgresqltutorial.com/load-postgresql-sample-database/
+
 Follow the steps through the end of "Verify the loaded sample database".
 #### Connecting to the PostgreSQL server
 Relaunch PgAdmin III and click on the PostgreSQL server within the Object browser. Click the PostgreSQL server from the left pane and enter your superuser (postgres) password.
