@@ -1,0 +1,79 @@
+/* 1. Who is the best Invoice Customer? */
+
+SELECT c.FirstName||' '||c.LastName AS CustomerName, SUM(i.Total) AS Invoice_total
+FROM Invoice i
+JOIN Customer c
+ON i.CustomerId = c.CustomerId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10;
+
+/* 2. Who are the top 10 Rock Music Bands? */
+
+SELECT a.ArtistId, a.Name As BandName , COUNT(t.TrackId) AS Songs
+FROM Artist a
+JOIN Album ab
+ON a.ArtistId = ab.ArtistId
+JOIN Track t
+ON ab.AlbumId = t.AlbumId
+JOIN Genre g
+ON t.GenreId = g.GenreId
+WHERE g.Name = 'Rock'
+GROUP BY 1,2
+ORDER BY 3 DESC
+LIMIT 10;
+
+/* 3. Who is the Top Purchaser of the most earning music band ? */
+
+WITH t1 AS (
+SELECT a.Name AS Artist_Name, SUM(il.UnitPrice * il.Quantity) AS Amount
+FROM Artist a
+JOIN Album ab
+ON a.ArtistId = ab.ArtistId
+JOIN Track t
+ON ab.AlbumId = t.AlbumId
+JOIN InvoiceLine il
+ON t.TrackId = il.TrackId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 1
+)
+
+SELECT c.CustomerId, (c.FirstName||' '||c.LastName) AS CustomerName, SUM(il.UnitPrice * il.Quantity) AS AmountSpent
+FROM Customer c
+JOIN Invoice i
+ON c.CustomerId = i.CustomerId
+JOIN InvoiceLine il
+ON i.InvoiceId = il.InvoiceId
+JOIN Track t
+ON il.TrackId = t.TrackId
+JOIN Album ab
+ON t.AlbumId = ab.AlbumId
+JOIN Artist a
+ON ab.ArtistId = a.ArtistId
+JOIN t1
+ON a.Name = t1.Artist_Name
+GROUP BY 1,2
+ORDER BY 3 DESC
+LIMIT 10;
+
+/* 4. What is the most popular Music Genre by each Country ?
+
+WITH p AS (
+SELECT c.Country, g.Name AS GenreName, COUNT(i.InvoiceId) AS Purchases, g.GenreId
+FROM Customer c
+JOIN Invoice i
+ON c.CustomerId = i.CustomerId
+JOIN InvoiceLine il
+ON i.InvoiceId = il.InvoiceId
+JOIN Track t
+ON il.TrackId = t.TrackId
+JOIN Genre g
+ON t.GenreId = g.GenreId
+GROUP BY 1,2,4
+ORDER BY 3 DESC)
+
+SELECT p.*
+FROM p
+WHERE Purchases = (SELECT  MAX(Purchases) FROM p p2 WHERE p2.Country = p.Country)
+ORDER BY 2,1 DESC;
